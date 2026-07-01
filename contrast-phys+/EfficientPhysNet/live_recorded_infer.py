@@ -22,7 +22,7 @@ import time
 _EPN = os.path.dirname(os.path.abspath(__file__))
 _CP = os.path.dirname(_EPN)
 _PRETRAINED = os.path.join(_CP, "pretrained", "EfficientPhysNet")
-_EPN2D = os.path.join(_CP, "PhysNet 2D")
+_EPN2D = os.path.join(_CP, "PhysNet_2D")
 sys.path.insert(0, _CP)
 sys.path.insert(0, _EPN2D)
 
@@ -104,41 +104,52 @@ def _estimate_hr(rppg_f, fs):
     return float(hr_sel if hr_sel is not None else hr_raw)
 
 
-def _try_load_session_gt(session_dir):
-    """BVP.csv + frames_timestamp.csv，与 live_epn.load_gt_hr_from_bvp_csv 列约定一致。"""
+def _try_load_session_gt(session_dir, video_path=None):
+    """BVP.csv + per-camera frame timestamps (host clock when sync_manifest present)."""
     bvp_path = os.path.join(session_dir, "BVP.csv")
-    ts_path = os.path.join(session_dir, "frames_timestamp.csv")
-    if not (os.path.isfile(bvp_path) and os.path.isfile(ts_path)):
+    if not os.path.isfile(bvp_path):
         return None
+
     bvp_df = pd.read_csv(bvp_path)
-    ts_df = pd.read_csv(ts_path)
     t_bvp = bvp_df.iloc[:, 0].values.astype(float)
     bvp_raw = bvp_df.iloc[:, 1].values.astype(float)
-    frame_col = ts_df.columns[0]
-    ts_col = ts_df.columns[1]
-    frame_ids = ts_df[frame_col].values.astype(np.int64)
-    ts_wall = ts_df[ts_col].values.astype(float)
-    mx = int(frame_ids.max()) + 1
-    ts_lut = np.full(mx, np.nan, dtype=np.float64)
-    for fid, tw in zip(frame_ids, ts_wall):
-        if 0 <= fid < mx:
-            ts_lut[fid] = tw
 
-    # ── Auto-detect and correct clock offset ────────────────────────
-    # If camera timestamps fall outside the BVP time range, the camera
-    # uses a different system clock (e.g. Android vs PC).  Shift camera
-    # timestamps into the BVP domain so interp_bvp returns real data.
-    clock_offset = 0.0
-    valid_ts = ts_lut[~np.isnan(ts_lut)]
-    if len(valid_ts) > 1 and len(t_bvp) > 1:
-        cam_start, cam_end = float(valid_ts[0]), float(valid_ts[-1])
-        bvp_start, bvp_end = float(t_bvp[0]), float(t_bvp[-1])
-        overlap = max(0.0, min(cam_end, bvp_end) - max(cam_start, bvp_start))
-        cam_dur = cam_end - cam_start
-        if cam_dur > 0 and overlap < cam_dur * 0.5:
-            clock_offset = cam_start - bvp_start
-            ts_lut = ts_lut - clock_offset
-            print(f"  [GT-align] clock offset {clock_offset:.1f}s detected, shifted to BVP domain")
+    ts_info = None
+    if video_path and os.path.isfile(video_path):
+        _epn_dir = os.path.dirname(os.path.abspath(__file__))
+        if _epn_dir not in sys.path:
+            sys.path.insert(0, _epn_dir)
+        from session_gt_utils import build_ts_lut
+        ts_info = build_ts_lut(session_dir, video_path, bvp_times=t_bvp)
+    if ts_info is None:
+        ts_path = os.path.join(session_dir, "frames_timestamp.csv")
+        if not os.path.isfile(ts_path):
+            return None
+        ts_df = pd.read_csv(ts_path)
+        frame_col = ts_df.columns[0]
+        ts_col = ts_df.columns[1]
+        frame_ids = ts_df[frame_col].values.astype(np.int64)
+        ts_wall = ts_df[ts_col].values.astype(float)
+        mx = int(frame_ids.max()) + 1
+        ts_lut = np.full(mx, np.nan, dtype=np.float64)
+        for fid, tw in zip(frame_ids, ts_wall):
+            if 0 <= fid < mx:
+                ts_lut[fid] = tw
+        clock_offset = 0.0
+        valid_ts = ts_lut[~np.isnan(ts_lut)]
+        if len(valid_ts) > 1 and len(t_bvp) > 1:
+            cam_start, cam_end = float(valid_ts[0]), float(valid_ts[-1])
+            bvp_start, bvp_end = float(t_bvp[0]), float(t_bvp[-1])
+            overlap = max(0.0, min(cam_end, bvp_end) - max(cam_start, bvp_start))
+            cam_dur = cam_end - cam_start
+            if cam_dur > 0 and overlap < cam_dur * 0.5:
+                clock_offset = cam_start - bvp_start
+                ts_lut = ts_lut - clock_offset
+                print(f"  [GT-align] clock offset {clock_offset:.1f}s detected, shifted to BVP domain")
+        ts_info = {"ts_lut": ts_lut, "clock_offset": clock_offset}
+    else:
+        if ts_info["clock_offset"] != 0.0:
+            print(f"  [GT-align] clock offset {ts_info['clock_offset']:.1f}s detected, shifted to BVP domain")
 
     interp_bvp = interp1d(
         t_bvp,
@@ -147,7 +158,12 @@ def _try_load_session_gt(session_dir):
         bounds_error=False,
         fill_value="extrapolate",
     )
-    return {"interp_bvp": interp_bvp, "ts_lut": ts_lut, "clock_offset": clock_offset}
+    return {
+        "interp_bvp": interp_bvp,
+        "ts_lut": ts_info["ts_lut"],
+        "clock_offset": ts_info["clock_offset"],
+        "camera_key": ts_info.get("camera_key"),
+    }
 
 
 def _clip_time_axis(gt_pack, frame_nums_slice, fs):
@@ -239,7 +255,7 @@ def main():
     ap.add_argument("--landmarks", default=None, help="OpenFace 2D landmarks CSV")
     ap.add_argument(
         "--openface-dir",
-        default=os.path.join(_CP, "OpenFace"),
+        default=os.path.join(os.path.dirname(_CP), "OpenFace"),
         help="未提供 landmarks 时自动运行 FeatureExtraction",
     )
     ap.add_argument(
@@ -275,7 +291,7 @@ def main():
         raise FileNotFoundError(video_path)
 
     session_dir = os.path.abspath(args.session_dir or os.path.dirname(video_path))
-    gt_pack = _try_load_session_gt(session_dir)
+    gt_pack = _try_load_session_gt(session_dir, video_path=video_path)
     pretrained_dir = os.path.join(_PRETRAINED, args.strategy)
     config_path = os.path.join(pretrained_dir, "config.json")
     weight_path = os.path.join(pretrained_dir, "best_model.pt")

@@ -17,6 +17,7 @@ Layer 2 心率结果（Device-level）: MAE / RMSE / P5 / P10 / Pearson(HR)
   cd contrast-phys+
   python EfficientPhysNet/evaluation/evaluate.py <pred_dir> [--save-viz]
 """
+import csv
 import json
 import os
 import re
@@ -133,7 +134,8 @@ def _compute_norm_psd(sig, fs_hz, high_pass_bpm=40, low_pass_bpm=250):
     n = len(sig)
     if n < 10:
         return None, None
-    x = np.fft.rfft(sig, norm="forward")
+    window = np.hanning(n)
+    x = np.fft.rfft(sig * window, norm="forward")
     psd = x.real**2 + x.imag**2
     freqs_hz = np.fft.rfftfreq(n, 1.0 / fs_hz)
     low_hz, high_hz = high_pass_bpm / 60.0, low_pass_bpm / 60.0
@@ -349,6 +351,11 @@ def main():
                 meta_json.get("clips_total", "N/A"),
             )
         )
+    if meta_json.get("native_fps_policy"):
+        print(
+            f"native_fps=True | train_fs={meta_json.get('train_fs')} | "
+            f"eval_fps={meta_json.get('eval_fps_values')}"
+        )
     print(f"Layer 1 PSD: {'启用' if use_psd_eval else '跳过'} | HR 用于 Capture-SNR: {'是' if use_hr_eval else '否'}")
     print(f"Layer 2 HR 指标: {'启用' if use_hr_eval else '跳过'}")
     print("诊断: Random 10s 子窗 | WaveCorr / ACF")
@@ -367,12 +374,17 @@ def main():
     all_10s_hr_pred, all_10s_hr_gt = [], []
     all_clip_details = []
     per_subject_data = {}
-    T10 = int(10 * fs)
 
     for f in npy_files:
         data = np.load(os.path.join(pred_dir, f), allow_pickle=True).item()
         subject = f.replace(".npy", "")
-        print(f"\n{subject}:")
+        sub_fs = (
+            float(data["fs"])
+            if isinstance(data, dict) and data.get("fs") is not None
+            else float(fs)
+        )
+        T10_sub = int(10 * sub_fs)
+        print(f"\n{subject} (fs={sub_fs:.3f} Hz):")
         print("-" * 56)
 
         s_psd_corr, s_psd_mse = [], []
@@ -384,13 +396,13 @@ def main():
         for i in range(len(data["rppg_list"])):
             rppg = np.asarray(data["rppg_list"][i], dtype=np.float64)
             bvp = np.asarray(data["bvp_list"][i], dtype=np.float64)
-            clip_dur_s = len(rppg) / fs
+            clip_dur_s = len(rppg) / sub_fs
 
-            rppg_f = butter_bandpass(rppg, lowcut=0.6, highcut=4, fs=fs)
-            bvp_f = butter_bandpass(bvp, lowcut=0.6, highcut=4, fs=fs)
+            rppg_f = butter_bandpass(rppg, lowcut=0.6, highcut=4, fs=sub_fs)
+            bvp_f = butter_bandpass(bvp, lowcut=0.6, highcut=4, fs=sub_fs)
 
             psd_corr, psd_mse = (
-                _psd_metrics(rppg_f, bvp_f, fs) if use_psd_eval else (np.nan, np.nan)
+                _psd_metrics(rppg_f, bvp_f, sub_fs) if use_psd_eval else (np.nan, np.nan)
             )
             if use_psd_eval:
                 s_psd_corr.append(psd_corr)
@@ -402,10 +414,10 @@ def main():
             hr_err = np.nan
             if use_hr_eval:
                 hr_pred = _estimate_hr(
-                    rppg_f, fs, hr_method, use_harmonics_removal, smart_peak
+                    rppg_f, sub_fs, hr_method, use_harmonics_removal, smart_peak
                 )
                 hr_gt = _estimate_hr(
-                    bvp_f, fs, hr_method, use_harmonics_removal, smart_peak
+                    bvp_f, sub_fs, hr_method, use_harmonics_removal, smart_peak
                 )
                 hr_err = abs(hr_pred - hr_gt)
                 s_hr_pred.append(hr_pred)
@@ -414,15 +426,15 @@ def main():
                 all_hr_pred.append(hr_pred)
                 all_hr_gt.append(hr_gt)
 
-            ipr_val = _ipr_numpy(rppg, fs)
+            ipr_val = _ipr_numpy(rppg, sub_fs)
             cap_snr = (
-                _capture_snr_db(rppg_f, hr_gt, fs)
+                _capture_snr_db(rppg_f, hr_gt, sub_fs)
                 if use_hr_eval and not np.isnan(hr_gt)
                 else np.nan
             )
             hr_std_sw = (
                 _hr_subwindow_stability(
-                    rppg, fs, hr_method, use_harmonics_removal, smart_peak
+                    rppg, sub_fs, hr_method, use_harmonics_removal, smart_peak
                 )
                 if use_hr_eval
                 else np.nan
@@ -435,8 +447,8 @@ def main():
             all_hr_sub_std.append(hr_std_sw)
 
             w_corr0 = _safe_pearson(rppg_f, bvp_f)
-            w_corr_lag = _max_lag_corr(rppg_f, bvp_f, fs_hz=fs, max_lag_s=max_lag_sec)
-            acf_corr = _acf_corr(rppg_f, bvp_f, fs_hz=fs, acf_lag_s=4.0)
+            w_corr_lag = _max_lag_corr(rppg_f, bvp_f, fs_hz=sub_fs, max_lag_s=max_lag_sec)
+            acf_corr = _acf_corr(rppg_f, bvp_f, fs_hz=sub_fs, acf_lag_s=4.0)
             s_wlag.append(w_corr_lag)
             s_acf.append(acf_corr)
             all_wave_corr0.append(w_corr0)
@@ -461,13 +473,11 @@ def main():
             if save_viz:
                 viz_dir = os.path.join(eval_out_dir, "viz_waveform")
                 os.makedirs(viz_dir, exist_ok=True)
-                t = np.arange(len(rppg_f)) / fs
-                fbpm_p, psd_p = _compute_norm_psd(rppg_f, fs)
-                fbpm_g, psd_g = _compute_norm_psd(bvp_f, fs)
-                acf_lag = int(4.0 * fs)
+                t = np.arange(len(rppg_f)) / sub_fs
+                acf_lag = int(4.0 * sub_fs)
                 acf_p = _acf(rppg_f, acf_lag)
                 acf_g = _acf(bvp_f, acf_lag)
-                lag_sec = np.arange(acf_lag + 1) / fs
+                lag_sec = np.arange(acf_lag + 1) / sub_fs
 
                 rppg_plot = (rppg_f - np.mean(rppg_f)) / (np.std(rppg_f) + 1e-12)
                 bvp_plot = (bvp_f - np.mean(bvp_f)) / (np.std(bvp_f) + 1e-12)
@@ -480,12 +490,41 @@ def main():
                 ax[0].legend()
                 ax[0].grid(True, alpha=0.3)
 
-                if fbpm_p is not None and fbpm_g is not None:
-                    ax[1].plot(fbpm_p, psd_p, "b-", linewidth=1.0, label="pred PSD")
-                    ax[1].plot(fbpm_g, psd_g, "r-", linewidth=1.0, alpha=0.8, label="GT PSD")
-                    ax[1].set_xlim(40, 250)
-                    ax[1].set_title("Normalized PSD (40-250 BPM)")
-                    ax[1].legend()
+                # 幅度谱（与 _estimate_hr/hr_fft_parabolic 同源）；竖线=算法选的HR，▽=谱argmax
+                def _band_amp(sig_f, fs_hz, lo=40, hi=250):
+                    nN = len(sig_f)
+                    xb = np.arange(nN) / nN * fs_hz * 60.0
+                    m = (xb >= lo) & (xb <= hi)
+                    a = sig_f[m].astype(np.float64)
+                    s = a.max() if a.size and a.max() > 0 else 1.0
+                    return xb[m], a / s
+
+                _, amp_p_full, _ = hr_fft_parabolic(
+                    rppg_f, fs=sub_fs, harmonics_removal=use_harmonics_removal
+                )
+                _, amp_g_full, _ = hr_fft_parabolic(
+                    bvp_f, fs=sub_fs, harmonics_removal=use_harmonics_removal
+                )
+                xb_p, ap = _band_amp(amp_p_full, sub_fs)
+                xb_g, ag = _band_amp(amp_g_full, sub_fs)
+                ax[1].plot(xb_p, ap, "b-", linewidth=1.0, label="pred |FFT|")
+                ax[1].plot(xb_g, ag, "r-", linewidth=1.0, alpha=0.8, label="GT |FFT|")
+                if xb_p.size:
+                    k = int(np.argmax(ap))
+                    ax[1].plot(xb_p[k], ap[k], "bv", ms=7, label="pred argmax")
+                if xb_g.size:
+                    k = int(np.argmax(ag))
+                    ax[1].plot(xb_g[k], ag[k], "rv", ms=7, label="GT argmax")
+                if use_hr_eval and not np.isnan(hr_pred):
+                    ax[1].axvline(hr_pred, color="b", ls="--", alpha=0.6,
+                                  label=f"HR pred {hr_pred:.1f}")
+                if use_hr_eval and not np.isnan(hr_gt):
+                    ax[1].axvline(hr_gt, color="r", ls="--", alpha=0.6,
+                                  label=f"HR GT {hr_gt:.1f}")
+                ax[1].set_xlim(40, 250)
+                ax[1].set_xlabel("Heart Rate (bpm)")
+                ax[1].set_title("Amplitude spectrum (HR algo)  dashed=HR est  v=spectral argmax")
+                ax[1].legend(fontsize=8)
                 ax[1].grid(True, alpha=0.3)
 
                 if acf_p is not None and acf_g is not None:
@@ -507,6 +546,7 @@ def main():
                 {
                     "subject": subject,
                     "clip_idx": i,
+                    "clip_dur_s": clip_dur_s,
                     "psd_corr": psd_corr if use_psd_eval else None,
                     "psd_mse": psd_mse if use_psd_eval else None,
                     "hr_pred": hr_pred if use_hr_eval else None,
@@ -515,23 +555,26 @@ def main():
                     "capture_snr_db": cap_snr,
                     "ipr": ipr_val,
                     "hr_half_std": hr_std_sw,
+                    "wave_corr0": w_corr0,
+                    "wave_corr_lag": w_corr_lag,
+                    "acf_corr": acf_corr,
                 }
             )
 
             n_rand = max(1, int(clip_dur_s / 10))
             clip_frames = len(rppg)
-            if clip_frames >= T10:
+            if clip_frames >= T10_sub:
                 for j in range(n_rand):
                     letter = chr(ord("a") + j)
                     seed_j = abs(hash(f"{subject}_{i}_{letter}")) % (2**31)
                     rng_j = np.random.default_rng(seed_j)
-                    start_j = int(rng_j.integers(0, clip_frames - T10 + 1))
-                    rppg_j = rppg[start_j : start_j + T10]
-                    bvp_j = bvp[start_j : start_j + T10]
-                    rppg_jf = butter_bandpass(rppg_j, lowcut=0.6, highcut=4, fs=fs)
-                    bvp_jf = butter_bandpass(bvp_j, lowcut=0.6, highcut=4, fs=fs)
+                    start_j = int(rng_j.integers(0, clip_frames - T10_sub + 1))
+                    rppg_j = rppg[start_j : start_j + T10_sub]
+                    bvp_j = bvp[start_j : start_j + T10_sub]
+                    rppg_jf = butter_bandpass(rppg_j, lowcut=0.6, highcut=4, fs=sub_fs)
+                    bvp_jf = butter_bandpass(bvp_j, lowcut=0.6, highcut=4, fs=sub_fs)
                     psd_cj, psd_mj = (
-                        _psd_metrics(rppg_jf, bvp_jf, fs)
+                        _psd_metrics(rppg_jf, bvp_jf, sub_fs)
                         if use_psd_eval
                         else (np.nan, np.nan)
                     )
@@ -539,14 +582,14 @@ def main():
                     if use_hr_eval:
                         hr_pj = _estimate_hr(
                             rppg_jf,
-                            fs,
+                            sub_fs,
                             hr_method,
                             use_harmonics_removal,
                             smart_peak,
                         )
                         hr_gj = _estimate_hr(
                             bvp_jf,
-                            fs,
+                            sub_fs,
                             hr_method,
                             use_harmonics_removal,
                             smart_peak,
@@ -573,7 +616,7 @@ def main():
                 )
             print(
                 f"  Clip {ci + 1}{letter:<2}[ 10s]: {' | '.join(partsj)}"
-                f"  ── seed={seed_j} start={start_j / fs:.1f}s"
+                f"  ── seed={seed_j} start={start_j / sub_fs:.1f}s"
             )
 
         if s_psd_corr or s_hr_pred:
@@ -842,8 +885,35 @@ def main():
     with open(os.path.join(eval_out_dir, "summary.txt"), "w", encoding="utf-8") as f:
         f.write("\n".join(summary_lines))
 
+    clip_csv = os.path.join(eval_out_dir, "clip_details.csv")
+    if details_filtered:
+        clip_fields = [
+            "subject",
+            "clip_idx",
+            "clip_dur_s",
+            "psd_corr",
+            "psd_mse",
+            "capture_snr_db",
+            "ipr",
+            "wave_corr0",
+            "wave_corr_lag",
+            "acf_corr",
+            "hr_half_std",
+            "hr_pred",
+            "hr_gt",
+            "error",
+        ]
+        with open(clip_csv, "w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=clip_fields, extrasaction="ignore")
+            w.writeheader()
+            for c in details_filtered:
+                row = dict(c)
+                row["clip_idx"] = c["clip_idx"] + 1
+                w.writerow(row)
+
     print(f"\n评估结果已保存到: {eval_out_dir}")
     print("  - summary.txt")
+    print("  - clip_details.csv")
     if save_viz:
         print("  - viz_waveform/*.png")
     print("✓ 评估完成")

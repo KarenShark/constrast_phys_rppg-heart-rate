@@ -1,0 +1,203 @@
+{
+  "description": "Self-Recorded 6人×3相机 三条rPPG线; EPN复用20260622_101519",
+  "jobs": [
+    {
+      "id": "Baldwin_android",
+      "subject": "Baldwin",
+      "session": "v01",
+      "camera_key": "android_KB2505160252",
+      "camera_label": "android",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Baldwin/v01/android_KB2505160252_2026-06-17_16-47_30fps.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Baldwin/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Baldwin/v01/android_KB2505160252/live_runs/2026-06-22_10-15-20/landmarks/android_KB2505160252_2026-06-17_16-47_30fps.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Baldwin/v01/android_KB2505160252/live_runs/2026-06-22_10-15-20"
+    },
+    {
+      "id": "Baldwin_webcam",
+      "subject": "Baldwin",
+      "session": "v01",
+      "camera_key": "video_RAW_YUV420",
+      "camera_label": "webcam",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Baldwin/v01/video_RAW_YUV420.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Baldwin/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Baldwin/v01/video_RAW_YUV420/live_runs/2026-06-22_10-15-57/landmarks/video_RAW_YUV420.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Baldwin/v01/video_RAW_YUV420/live_runs/2026-06-22_10-15-57"
+    },
+    {
+      "id": "Baldwin_ios",
+      "subject": "Baldwin",
+      "session": "v01",
+      "camera_key": "ios_00008110_000A55643AEB801E",
+      "camera_label": "ios",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Baldwin/v01/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Baldwin/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Baldwin/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-15-37/landmarks/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Baldwin/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-15-37"
+    },
+    {
+      "id": "Benny_android",
+      "subject": "Benny",
+      "session": "v01",
+      "camera_key": "android_KB2505160252",
+      "camera_label": "android",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Benny/v01/android_KB2505160252_2026-06-17_17-04_30fps.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Benny/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Benny/v01/android_KB2505160252/live_runs/2026-06-22_10-16-16/landmarks/android_KB2505160252_2026-06-17_17-04_30fps.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Benny/v01/android_KB2505160252/live_runs/2026-06-22_10-16-16"
+    },
+    {
+      "id": "Benny_webcam",
+      "subject": "Benny",
+      "session": "v01",
+      "camera_key": "video_RAW_YUV420",
+      "camera_label": "webcam",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Benny/v01/video_RAW_YUV420.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Benny/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Benny/v01/video_RAW_YUV420/live_runs/2026-06-22_10-16-55/landmarks/video_RAW_YUV420.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Benny/v01/video_RAW_YUV420/live_runs/2026-06-22_10-16-55"
+    },
+    {
+      "id": "Benny_ios",
+      "subject": "Benny",
+      "session": "v01",
+      "camera_key": "ios_00008110_000A55643AEB801E",
+      "camera_label": "ios",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Benny/v01/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Benny/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Benny/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-16-36/landmarks/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Benny/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-16-36"
+    },
+    {
+      "id": "Eric_android",
+      "subject": "Eric",
+      "session": "v01",
+      "camera_key": "android_KB2505160252",
+      "camera_label": "android",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Eric/v01/android_KB2505160252_2026-06-17_17-07_30fps.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Eric/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Eric/v01/android_KB2505160252/live_runs/2026-06-22_10-17-15/landmarks/android_KB2505160252_2026-06-17_17-07_30fps.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Eric/v01/android_KB2505160252/live_runs/2026-06-22_10-17-15"
+    },
+    {
+      "id": "Eric_webcam",
+      "subject": "Eric",
+      "session": "v01",
+      "camera_key": "video_RAW_YUV420",
+      "camera_label": "webcam",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Eric/v01/video_RAW_YUV420.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Eric/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Eric/v01/video_RAW_YUV420/live_runs/2026-06-22_10-17-54/landmarks/video_RAW_YUV420.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Eric/v01/video_RAW_YUV420/live_runs/2026-06-22_10-17-54"
+    },
+    {
+      "id": "Eric_ios",
+      "subject": "Eric",
+      "session": "v01",
+      "camera_key": "ios_00008110_000A55643AEB801E",
+      "camera_label": "ios",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Eric/v01/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Eric/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Eric/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-17-34/landmarks/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Eric/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-17-34"
+    },
+    {
+      "id": "Hugo_android",
+      "subject": "Hugo",
+      "session": "v01",
+      "camera_key": "android_KB2505160252",
+      "camera_label": "android",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Hugo/v01/android_KB2505160252_2026-06-17_16-49_30fps.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Hugo/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Hugo/v01/android_KB2505160252/live_runs/2026-06-22_10-18-14/landmarks/android_KB2505160252_2026-06-17_16-49_30fps.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Hugo/v01/android_KB2505160252/live_runs/2026-06-22_10-18-14"
+    },
+    {
+      "id": "Hugo_webcam",
+      "subject": "Hugo",
+      "session": "v01",
+      "camera_key": "video_RAW_YUV420",
+      "camera_label": "webcam",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Hugo/v01/video_RAW_YUV420.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Hugo/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Hugo/v01/video_RAW_YUV420/live_runs/2026-06-22_10-18-54/landmarks/video_RAW_YUV420.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Hugo/v01/video_RAW_YUV420/live_runs/2026-06-22_10-18-54"
+    },
+    {
+      "id": "Hugo_ios",
+      "subject": "Hugo",
+      "session": "v01",
+      "camera_key": "ios_00008110_000A55643AEB801E",
+      "camera_label": "ios",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Hugo/v01/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Hugo/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Hugo/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-18-33/landmarks/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Hugo/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-18-33"
+    },
+    {
+      "id": "Karen_android",
+      "subject": "Karen",
+      "session": "v01",
+      "camera_key": "android_KB2505160252",
+      "camera_label": "android",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Karen/v01/android_KB2505160252_2026-06-17_16-54_30fps.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Karen/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Karen/v01/android_KB2505160252/live_runs/2026-06-22_10-19-13/landmarks/android_KB2505160252_2026-06-17_16-54_30fps.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Karen/v01/android_KB2505160252/live_runs/2026-06-22_10-19-13"
+    },
+    {
+      "id": "Karen_webcam",
+      "subject": "Karen",
+      "session": "v01",
+      "camera_key": "video_RAW_YUV420",
+      "camera_label": "webcam",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Karen/v01/video_RAW_YUV420.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Karen/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Karen/v01/video_RAW_YUV420/live_runs/2026-06-22_10-19-53/landmarks/video_RAW_YUV420.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Karen/v01/video_RAW_YUV420/live_runs/2026-06-22_10-19-53"
+    },
+    {
+      "id": "Karen_ios",
+      "subject": "Karen",
+      "session": "v01",
+      "camera_key": "ios_00008110_000A55643AEB801E",
+      "camera_label": "ios",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Karen/v01/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Karen/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Karen/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-19-33/landmarks/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Karen/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-19-33"
+    },
+    {
+      "id": "Valetta_android",
+      "subject": "Valetta",
+      "session": "v01",
+      "camera_key": "android_KB2505160252",
+      "camera_label": "android",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Valetta/v01/android_KB2505160252_2026-06-17_16-58_30fps.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Valetta/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Valetta/v01/android_KB2505160252/live_runs/2026-06-22_10-20-11/landmarks/android_KB2505160252_2026-06-17_16-58_30fps.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Valetta/v01/android_KB2505160252/live_runs/2026-06-22_10-20-11"
+    },
+    {
+      "id": "Valetta_webcam",
+      "subject": "Valetta",
+      "session": "v01",
+      "camera_key": "video_RAW_YUV420",
+      "camera_label": "webcam",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Valetta/v01/video_RAW_YUV420.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Valetta/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Valetta/v01/video_RAW_YUV420/live_runs/2026-06-22_10-20-51/landmarks/video_RAW_YUV420.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Valetta/v01/video_RAW_YUV420/live_runs/2026-06-22_10-20-51"
+    },
+    {
+      "id": "Valetta_ios",
+      "subject": "Valetta",
+      "session": "v01",
+      "camera_key": "ios_00008110_000A55643AEB801E",
+      "camera_label": "ios",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Valetta/v01/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/Valetta/v01",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Valetta/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-20-31/landmarks/ios_00008110_000A55643AEB801E_ios_CA8963A6_6609_4778_9092_A570F381D45A_60_30_raw_yuv.csv",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_self_recorded/20260622_101519/per_camera/Valetta/v01/ios_00008110_000A55643AEB801E/live_runs/2026-06-22_10-20-31"
+    }
+  ]
+}

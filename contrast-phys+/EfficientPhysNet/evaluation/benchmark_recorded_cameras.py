@@ -14,10 +14,12 @@ from pathlib import Path
 from common_gt_compare import build_common_gt_outputs
 
 CP = Path(__file__).resolve().parents[2]
+_EPN_DIR = CP / "EfficientPhysNet"
+sys.path.insert(0, str(_EPN_DIR))
+from session_gt_utils import RAW_CAMERA_STEM, detect_camera_from_video
+
 DEFAULT_DATA_ROOT = Path("/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Recorded_3 Cameras")
 DEFAULT_RESULTS_ROOT = CP / "results" / "EfficientPhysNet" / "label_ratio_0" / "camera_compare"
-RAW_CAMERA_STEM = "video_RAW_YUV420"
-ANDROID_VIDEO_RE = re.compile(r"^(android_[^_]+)_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}$")
 SESSION_RE = re.compile(r"^v\d+$", re.IGNORECASE)
 
 
@@ -56,26 +58,14 @@ def camera_sort_key(camera_key):
 
 
 def detect_camera_video(video_path):
-    stem = video_path.stem
-    session_dir = video_path.parent
-    if stem == RAW_CAMERA_STEM:
-        timestamp_path = session_dir / "frames_timestamp.csv"
-        return {
-            "camera_key": RAW_CAMERA_STEM,
-            "camera_label": RAW_CAMERA_STEM,
-            "timestamp_path": timestamp_path,
-        }
-
-    match = ANDROID_VIDEO_RE.match(stem)
-    if not match:
+    info = detect_camera_from_video(str(video_path))
+    if info is None:
         return None
-
-    device_id = match.group(1)
-    timestamp_path = session_dir / f"{device_id}_frames_timestamp.csv"
+    ts = Path(info["timestamp_path"]) if info.get("timestamp_path") else None
     return {
-        "camera_key": device_id,
-        "camera_label": device_id,
-        "timestamp_path": timestamp_path,
+        "camera_key": info["camera_key"],
+        "camera_label": info["camera_key"],
+        "timestamp_path": ts,
     }
 
 
@@ -333,7 +323,7 @@ def main():
                 "--video",
                 str(job["video_path"]),
                 "--session-dir",
-                str(gt_proxy_dir),
+                str(job["session_dir"]),
                 "--strategy",
                 args.strategy,
                 "--scales",

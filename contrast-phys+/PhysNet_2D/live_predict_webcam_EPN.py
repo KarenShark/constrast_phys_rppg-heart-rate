@@ -188,6 +188,26 @@ def resolve_weight_path(train_exp_dir, epoch_arg):
     return path
 
 
+def _find_openface_exe(openface_dir):
+    """优先 build_openface_env（libavcodec 兼容），须从 exe 目录 cwd 运行。"""
+    explicit = os.environ.get("OPENFACE_BIN")
+    if explicit and os.path.isfile(explicit):
+        return explicit
+    candidates = [
+        os.path.join(openface_dir, "build_openface_env", "bin", "FeatureExtraction"),
+        "/home/vt_ai_test1/mamba-envs/ml/local/bin/FeatureExtraction",
+        os.path.join(openface_dir, "build", "bin", "FeatureExtraction"),
+        os.path.join(openface_dir, "bin", "FeatureExtraction"),
+        os.path.join(openface_dir, "exe", "FeatureExtraction"),
+        os.path.join(openface_dir, "local", "bin", "FeatureExtraction"),
+        os.path.join(openface_dir, "FeatureExtraction"),
+    ]
+    for p in candidates:
+        if os.path.isfile(p):
+            return p
+    return None
+
+
 def run_openface(video_path, out_dir, openface_dir):
     """
     调用 OpenFace FeatureExtraction 提取 landmarks，与 preprocess_ubfc 流程一致。
@@ -204,23 +224,10 @@ def run_openface(video_path, out_dir, openface_dir):
     out_dir = os.path.abspath(out_dir)
     os.makedirs(out_dir, exist_ok=True)
 
-    # 查找 FeatureExtraction（常见路径: build/bin/, bin/, local/bin/）
-    candidates = [
-        "build/bin/FeatureExtraction",
-        "bin/FeatureExtraction",
-        "exe/FeatureExtraction",
-        "FeatureExtraction",
-        "local/bin/FeatureExtraction",
-    ]
-    exe = None
-    for name in candidates:
-        p = os.path.join(openface_dir, name.replace("/", os.sep))
-        if os.path.isfile(p):
-            exe = p
-            break
+    exe = _find_openface_exe(openface_dir)
     if exe is None:
         raise FileNotFoundError(
-            "未找到 FeatureExtraction。请指定 --openface-dir（OpenFace 根目录或含 build/bin/ 的目录）"
+            "未找到 FeatureExtraction。设置 OPENFACE_BIN 或 --openface-dir（OpenFace 根目录）"
         )
 
     cmd = [exe, "-f", video_path, "-out_dir", out_dir, "-2Dfp"]

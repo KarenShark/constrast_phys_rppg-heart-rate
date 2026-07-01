@@ -27,7 +27,19 @@ _COLOR_MAP = {
     "video_RAW_YUV420": "#d1495b",
     "android_311YJP3P3080D200020": "#00798c",
     "android_RFCN3050F7T": "#edae49",
+    "android_KB2505160252": "#00798c",
+    "ios_00008110_000A55643AEB801E": "#30638e",
 }
+
+
+def _camera_color(camera):
+    if camera in _COLOR_MAP:
+        return _COLOR_MAP[camera]
+    if camera.startswith("android_"):
+        return "#00798c"
+    if camera.startswith("ios_"):
+        return "#30638e"
+    return None
 
 
 def mean_or_none(values):
@@ -386,7 +398,7 @@ def save_clip_waveform_plot(plot_path, payload, row, camera_order):
         label = camera
         if hr_val is not None and err_val is not None:
             label = f"{camera} ({hr_val:.1f} BPM, err {err_val:.1f})"
-        ax_wave.plot(time_sec, sig, label=label, linewidth=1.6, alpha=0.95, color=_COLOR_MAP.get(camera))
+        ax_wave.plot(time_sec, sig, label=label, linewidth=1.6, alpha=0.95, color=_camera_color(camera))
 
     ax_wave.set_title(
         f"{row['subject']}/{row['session']} | aligned clip {row['common_clip_idx']:02d} | shared window {row['window_duration_sec']:.2f}s"
@@ -423,7 +435,7 @@ def save_clip_waveform_plot(plot_path, payload, row, camera_order):
         label = camera
         if hr_val is not None and err_val is not None:
             label = f"{camera} ({hr_val:.1f} BPM)"
-        color = _COLOR_MAP.get(camera)
+        color = _camera_color(camera)
         ax_psd.plot(cam_bpm[bpm_mask], cam_mag_n, label=label,
                     linewidth=1.4, alpha=0.85, color=color)
         # Mark selected peak with triangle
@@ -473,7 +485,7 @@ def save_t60_summary_plot(plot_path, session_rows, session_payloads, camera_orde
         if any(v is not None for v in y):
             present_cameras.add(camera)
             axes[0].plot(x, y, marker="o", linewidth=1.6, label=camera,
-                         color=_COLOR_MAP.get(camera))
+                         color=_camera_color(camera))
     axes[0].set_title(
         f"{rows[0]['subject']}/{rows[0]['session']} | {len(rows)} clips | {total_dur:.0f}s"
     )
@@ -510,7 +522,7 @@ def save_t60_summary_plot(plot_path, session_rows, session_payloads, camera_orde
             if concat_signals[camera]:
                 axes[1].plot(full_time, np.concatenate(concat_signals[camera]),
                              linewidth=1.2, alpha=0.9, label=camera,
-                             color=_COLOR_MAP.get(camera))
+                             color=_camera_color(camera))
         actual_time = float(full_time[-1])
         axes[1].set_title(f"Concatenated waveform ({actual_time:.1f}s)")
         axes[1].set_xlabel("Time (s)")

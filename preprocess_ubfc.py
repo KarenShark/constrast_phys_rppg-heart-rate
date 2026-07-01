@@ -126,8 +126,9 @@ def load_ppg_signal_ubfc(ppg_path, target_length, original_fps=30, dataset_type=
         return np.zeros(target_length, dtype=np.float32)
 
 
-def openface_h5_with_ppg(video_path, landmark_path, h5_path, ppg_path=None, 
-                        store_size=128, video_fps=30, dataset_type=2):
+def openface_h5_with_ppg(video_path, landmark_path, h5_path, ppg_path=None,
+                        store_size=128, video_fps=30, dataset_type=2,
+                        bvp_array=None, h5_attrs=None):
     """
     从OpenFace landmarks裁剪人脸并保存为.h5文件，同时包含PPG信号
     
@@ -272,15 +273,29 @@ def openface_h5_with_ppg(video_path, landmark_path, h5_path, ppg_path=None,
             imgs[frame_num] = face
         
         # 处理PPG信号（如果提供）
-        if ppg_path and os.path.exists(ppg_path):
-            ppg_signal = load_ppg_signal_ubfc(ppg_path, total_num_frame, video_fps, dataset_type)
+        if bvp_array is not None:
+            bvp_arr = np.asarray(bvp_array, dtype=np.float32).reshape(-1)
+            if len(bvp_arr) != total_num_frame:
+                print(
+                    f"Error: bvp length {len(bvp_arr)} != frames {total_num_frame}"
+                )
+                cap.release()
+                return False
+            f.create_dataset('bvp', data=bvp_arr, compression="gzip")
+        elif ppg_path and os.path.exists(ppg_path):
+            ppg_signal = load_ppg_signal_ubfc(
+                ppg_path, total_num_frame, video_fps, dataset_type
+            )
             f.create_dataset('bvp', data=ppg_signal, compression="gzip")
             print(f"  Added PPG signal from {ppg_path} (Dataset{dataset_type} format)")
         else:
-            # 如果没有PPG信号，创建占位数组（训练时可能不需要）
             dummy_bvp = np.zeros(total_num_frame, dtype=np.float32)
             f.create_dataset('bvp', data=dummy_bvp, compression="gzip")
             print(f"  Created dummy BVP signal (no PPG file provided)")
+
+        if h5_attrs:
+            for key, val in h5_attrs.items():
+                f.attrs[key] = val
     
     cap.release()
     return True

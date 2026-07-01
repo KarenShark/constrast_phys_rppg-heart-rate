@@ -1,0 +1,38 @@
+{
+  "description": "Karen compare_android 三相机 × 三条 rPPG 线；EPN 复用已有 run",
+  "jobs": [
+    {
+      "id": "karen_webcam",
+      "subject": "Karen",
+      "session": "karen",
+      "camera_key": "video_RAW_YUV420",
+      "camera_label": "webcam",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/compare_android/Karen/karen/video_RAW_YUV420.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/compare_android/Karen/karen",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_android/20260624_karen_full/per_camera/Karen/karen/video_RAW_YUV420/live_runs/2026-06-24_10-08-47",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_android/20260624_karen_full/per_camera/Karen/karen/video_RAW_YUV420/live_runs/2026-06-24_10-08-47/landmarks/video_RAW_YUV420.csv"
+    },
+    {
+      "id": "karen_android_old_model",
+      "subject": "Karen",
+      "session": "karen",
+      "camera_key": "android_KB2505160252",
+      "camera_label": "android_old_model_new_session",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/compare_android/Karen/karen/android_KB2505160252_2026-06-24_17-39_30fps.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/compare_android/Karen/karen",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_android/20260624_karen_full/per_camera/Karen/karen/android_KB2505160252/live_runs/2026-06-24_10-08-12",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_android/20260624_karen_full/per_camera/Karen/karen/android_KB2505160252/live_runs/2026-06-24_10-08-12/landmarks/android_KB2505160252_2026-06-24_17-39_30fps.csv"
+    },
+    {
+      "id": "karen_android_new_phone",
+      "subject": "Karen",
+      "session": "karen",
+      "camera_key": "android_NEWPHONE",
+      "camera_label": "android_new_phone",
+      "video": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/compare_android/Karen/karen/android_NEWPHONE_2026-06-24_17-39_30fps.avi",
+      "session_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/RPPG_data_benny_eric/Self-Recorded/compare_android/Karen/karen",
+      "epn_run_dir": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_android/20260624_karen_full/per_camera/Karen/karen/android_NEWPHONE/live_runs/2026-06-24_10-08-29",
+      "landmarks": "/home/vt_ai_test1/KarenHE/contrast-phys/contrast-phys+/results/EfficientPhysNet/label_ratio_0/camera_compare_android/20260624_karen_full/per_camera/Karen/karen/android_NEWPHONE/live_runs/2026-06-24_10-08-29/landmarks/android_NEWPHONE_2026-06-24_17-39_30fps.csv"
+    }
+  ]
+}
